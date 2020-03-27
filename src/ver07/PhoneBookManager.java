@@ -1,14 +1,17 @@
-package ver06;
+package ver07;
+import java.util.HashSet;
 import java.util.InputMismatchException;
+import java.util.Iterator;
 import java.util.Scanner;
+import java.util.Iterator;
 import ver06.MenuSelectException;
 
 
 public class PhoneBookManager implements MenuItem, SubMenuItem{
-	
 	private PhoneInfo [] memberbook;
 	private int numOfmember;//정보를 추가할 때 마다 +1증가
-	
+	//set컬렉션 생성
+	HashSet<PhoneInfo> list = new HashSet<PhoneInfo>();
 	//생성자
 		public PhoneBookManager(int num) {
 			memberbook = new PhoneInfo[num];
@@ -67,11 +70,30 @@ public class PhoneBookManager implements MenuItem, SubMenuItem{
 				}
 			}
 		}
-		
+		//이름 중복
+		public void OverlapCheck(String name, String phone, PhoneInfo phoneInfo) {
+			Scanner scan = new Scanner(System.in);
+			
+			
+			boolean a = list.add(phoneInfo);//ture면 저장됨.
+			
+			if(a == false) {
+				System.out.println("같은 이름이 있습니다. 덮어쓰시겠습니까? 덮어쓰기:1, 취소:2 ");
+				int choice03 = scan.nextInt();
+				if(choice03 == 1) {
+					list.remove(phoneInfo);
+					list.add(phoneInfo);
+				}else {
+					dataInput();
+				}
+			}else{
+			}
+		}
 		//데이터 입력
 		public void dataInput() {
 			Scanner scan = new Scanner(System.in);
 			String cName, cPhone, cBirth;
+			
 			try {
 				System.out.println("데이터 입력을 시작합니다...");
 				System.out.println("1.일반, 2.동창, 3.회사");
@@ -83,67 +105,74 @@ public class PhoneBookManager implements MenuItem, SubMenuItem{
 					throw selectEx;
 				}
 				
+				//이름, 전화번호
+				System.out.println("이름 : ");
+				cName = scan.nextLine();
+				
+				System.out.println("전화번호 : ");
+				cPhone = scan.nextLine();
 				
 				if(choice02==SubMenuItem.GENERAL) {
 					//일반 입력받기
-					System.out.println("이름 : ");
-					cName = scan.nextLine();
-					System.out.println("전화번호 : ");
-					cPhone = scan.nextLine();
-					memberbook[numOfmember++] = 
-							new PhoneInfo(cName, cPhone);
+					PhoneInfo phoneInfo = new PhoneInfo(cName, cPhone);
+					OverlapCheck(cName, cPhone, phoneInfo);
+					
 				}else if(choice02==SubMenuItem.MAJOR) {
 					//동창 입력받기
-					System.out.println("이름 : ");
-					cName = scan.nextLine();
-					System.out.println("전화번호 : ");
-					cPhone = scan.nextLine();
 					System.out.println("전공 : ");
 					String major = scan.nextLine();
 					System.out.println("학년 : ");
 					int hak = scan.nextInt();
-					PhoneSchoolInfo school = new PhoneSchoolInfo
-							(cName, cPhone, major, hak);
-					memberbook[numOfmember++] = school;
+					
+					PhoneInfo school = new PhoneSchoolInfo(cName, cPhone, major, hak);
+					OverlapCheck(cName, cPhone, school);
+					
 				}else if(choice02==SubMenuItem.COMPANY) {
 					//회사 입력받기
-					System.out.println("이름 : ");
-					cName = scan.nextLine();
-					System.out.println("전화번호 : ");
-					cPhone = scan.nextLine();
 					System.out.println("회사 : ");
 					String company = scan.nextLine();
 					
-					PhoneCompanyInfo companyIn = new PhoneCompanyInfo
-							(cName, cPhone, company);
-					memberbook[numOfmember++] = companyIn;
+					PhoneInfo companyIn = new PhoneCompanyInfo(cName, cPhone, company);
+					OverlapCheck(cName, cPhone, companyIn);
+					
 				}
 				System.out.println("데이터 입력이 완료되었습니다.");
 			}catch(MenuSelectException e) {
-				System.out.println(e.getMessage());
+				System.out.println("[예외발생] 1~3사이의 숫자를 입력하세요");
+				dataInput();
 			}
 			catch(InputMismatchException e) {
 				System.out.println("문자형태로 입력하면 안되요.");
 				scan.nextLine();
+				dataInput();
 			}
-			
-	}//end of input
+		}
 		//데이터 검색
 		private void dataSearch() {
 			Scanner scan = new Scanner(System.in);
-			
+			//이름으로 검색
 			System.out.println("검색 할 이름을 입력하세요 : ");
-				String searchName = scan.nextLine();
-				for (int i=0; i<numOfmember; i++) {
-					//System.out.println("검색중인 이름 :"+ searchName);
-					if(searchName.compareTo(memberbook[i].name)==0) {
-						memberbook[i].showPhoneInfo();
-						System.out.println("검색을 하였습니다.");
-					}else {
-						System.out.println("요청하신 정보가 없습니다.");
-					}
+			String searchName = scan.nextLine();
+			
+			//검색결과 유무 확인	
+			
+			boolean searchFlag = false;//검색결과 유무 확인	
+			Iterator<PhoneInfo> ir = list.iterator();
+			while(ir.hasNext()) {
+				PhoneInfo phoneInfo = ir.next();
+				if(searchName.endsWith(phoneInfo.name)) {
+					//검색결과가 있다면 플래그를 변경
+					searchFlag = true;
+					System.out.println(phoneInfo);
 				}
-		}
+			}
+			if(searchFlag == true) {
+				System.out.println("검색을 하였습니다.");
+			}else {
+				System.out.println("요청하신 정보가 없습니다.");
+			}
+				
+		}//end of dataSearch
 
 		
 		//데이터 삭제
@@ -152,34 +181,34 @@ public class PhoneBookManager implements MenuItem, SubMenuItem{
 			
 			System.out.println("삭제할 이름을 입력하세요 : ");
 			String deleteName = scan.nextLine();
-			scan.nextLine();
-			int deleteIndex = -1;
+			//scan.nextLine();
+			boolean searchFlag = false;//검색결과 유무 확인	
 			
-			for(int i=0; i<numOfmember; i++) {
-				if(deleteName.compareTo(memberbook[i].name)==0) {
-					
-					memberbook[i]=null;
-					deleteIndex =i;
-					numOfmember--;
+			Iterator<PhoneInfo> ir = list.iterator();
+			while(ir.hasNext()) {
+				PhoneInfo phoneInfo = ir.next();
+				if(deleteName.endsWith(phoneInfo.name)) {
+					//검색결과가 있다면 플래그를 변경
+					searchFlag = true;
+					System.out.println(phoneInfo);
+					list.remove(phoneInfo);
 				}
 			}
-			if(deleteIndex ==-1) {
-				System.out.println("==삭제된 데이터가 없습니다.==");
+			if(searchFlag == true) {
+				System.out.println("삭제를 하였습니다.");
+			}else {
+				System.out.println("요청하신 정보가 없습니다.");
 			}
-			else{
-				for(int i= deleteIndex; i< numOfmember; i++) {
-					memberbook[i] = memberbook[i+1];
-				}
-				System.out.println(deleteName+" 삭제되었습니다.");
-			}
-		}
+
+		}//end of deteDelete
 		//주소록 전체 출력
 			private void dataAllshow() {
-				for(int i=0; i< numOfmember; i++) {
-					memberbook[i].showPhoneInfo();
-				}
-				System.out.println("==주소록 전체가 출력되었습니다.==");
+				 System.out.println("[최초 전체 정보출력]");
+			      for(PhoneInfo info : list)
+			      {
+			         info.showPhoneInfo();      
+			      }
+			      
 			}
-		
 
 }
