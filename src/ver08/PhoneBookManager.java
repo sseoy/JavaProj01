@@ -1,5 +1,6 @@
 package ver08;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -13,16 +14,23 @@ import java.util.Scanner;
 import ver06.MenuSelectException;
 
 
-public class PhoneBookManager implements MenuItem, SubMenuItem{
-	
-	private PhoneInfo [] memberbook;
-	private int numOfmember;//정보를 추가할 때 마다 +1증가
-	//set컬렉션 생성
-	HashSet<PhoneInfo> list = new HashSet<PhoneInfo>();
-	//생성자
-		public PhoneBookManager(int num) {
-			memberbook = new PhoneInfo[num];
-			numOfmember = 0;
+public class PhoneBookManager {
+		
+		//private int numOfmember;//정보를 추가할 때 마다 +1증가
+		//set컬렉션 생성
+		HashSet<PhoneInfo> list;
+		
+		//생성자
+		public PhoneBookManager() {
+			
+			try {
+				ObjectInputStream in = new ObjectInputStream(new FileInputStream("src/ver08/PhoneBook.obj"));
+				
+				list = (HashSet<PhoneInfo>)in.readObject();
+			}
+			catch (Exception e) {
+				list = new HashSet<PhoneInfo>();
+		    }
 		}
 		//메뉴생성
 		public void printMenu() {
@@ -60,6 +68,7 @@ public class PhoneBookManager implements MenuItem, SubMenuItem{
 							dataAllshow();
 							break;
 						case MenuItem.END:
+							savePhoneBook();
 							System.out.println("프로그램을 종료합니다.");
 							return;
 						default:
@@ -219,14 +228,55 @@ public class PhoneBookManager implements MenuItem, SubMenuItem{
 			}
 
 		}//end of deteDelete
-		//주소록 전체 출력
-			private void dataAllshow() {
-				 System.out.println("[최초 전체 정보출력]");
-			      for(PhoneInfo info : list)
-			      {
-			         info.showPhoneInfo();      
-			      }
-			      
+		//주소록 전체 출력, 파일에 있는 정보 출력
+		private void dataAllshow() {
+//			try {
+//				ObjectInputStream in = new ObjectInputStream(new FileInputStream("src/ver08/PhoneBook.obj"));
+//
+//				PhoneInfo readInfo = (PhoneInfo)in.readObject();
+//				readInfo.showPhoneInfo();
+				System.out.println("[최초 전체 정보출력]");
+				    for(PhoneInfo info : list)
+				    {
+				        info.showPhoneInfo();      
+				    }
+//			}catch (ClassNotFoundException e) {
+//		    }catch (FileNotFoundException e) {
+//		    }catch (IOException e) {
+//		    }
+			     
+		}
+		
+		//파일형태로 저장하기
+		public void savePhoneBook() {
+			try {
+				ObjectOutputStream out = new ObjectOutputStream(
+						new FileOutputStream("src/ver08/PhoneBook.obj"));
+				
+				out.writeObject(list);
+						
+			}catch(Exception e) {
+				System.out.println("예외발생");
+				e.printStackTrace();
 			}
+		}
+}//end of PhoneBookManager
 
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
