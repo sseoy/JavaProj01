@@ -25,6 +25,9 @@ public class Statement extends ConnectDB{
 				 System.out.printf("%s %s %s\n",
 							name, phone, birth);
 			}
+			if(psmt.executeUpdate()==0) {
+				System.out.println("이름을 검색할수 없습니다.");
+			}
 			
 		}catch(SQLException e) {
 			e.printStackTrace();
