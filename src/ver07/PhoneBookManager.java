@@ -31,7 +31,7 @@ public class PhoneBookManager implements MenuItem, SubMenuItem{
 						System.out.println("5.프로그램 종료");
 						System.out.print("선택 : ");
 						
-					try {
+				try {
 						choice = scan.nextInt();
 						
 						if(choice<1 || choice>5) {

@@ -12,7 +12,7 @@ public class PraparedStatement extends ConnectDB{
 	public void dataInput() {
 	      try {
 	    	  //값의 세팅이 필요한 부분을 ?로 대체한다.
-	         String query = "INSERT into phonebook_tb values (?, ?, ?)";
+	         String query = "INSERT into phonebook_tb values (seq_phonebook.nextval, ?, ?, ?)";
 	         
 	         //쿼리문을 인자로 전달
 	         psmt = con.prepareStatement(query);

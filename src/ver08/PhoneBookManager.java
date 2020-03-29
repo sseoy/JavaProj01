@@ -166,11 +166,11 @@ public class PhoneBookManager {
 					scan.nextLine();
 					dataInput();
 				}
-			}catch (FileNotFoundException e) {
-		         // TODO: handle exception
-		      }catch (IOException e) {
-		         // TODO: handle exception
-		      }
+				}catch (FileNotFoundException e) {
+					
+				}catch (IOException e) {
+					
+				}
 				
 			}
 
@@ -184,6 +184,7 @@ public class PhoneBookManager {
 			//검색결과 유무 확인	
 			
 			boolean searchFlag = false;//검색결과 유무 확인	
+			
 			Iterator<PhoneInfo> ir = list.iterator();
 			while(ir.hasNext()) {
 				PhoneInfo phoneInfo = ir.next();
@@ -214,11 +215,11 @@ public class PhoneBookManager {
 			Iterator<PhoneInfo> ir = list.iterator();
 			while(ir.hasNext()) {
 				PhoneInfo phoneInfo = ir.next();
-				if(deleteName.endsWith(phoneInfo.name)) {
+				if(deleteName.equals(phoneInfo.name)) {
 					//검색결과가 있다면 플래그를 변경
 					searchFlag = true;
 					System.out.println(phoneInfo);
-					list.remove(phoneInfo);
+					ir.remove();
 				}
 			}
 			if(searchFlag == true) {

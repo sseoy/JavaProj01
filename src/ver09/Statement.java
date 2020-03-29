@@ -17,9 +17,9 @@ public class Statement extends ConnectDB{
 			psmt.setString(1, scanValue("검색할 이름"));
 			rs= psmt.executeQuery();
 			while(rs.next()) {
-				 String name = rs.getString(1);
-				 String phone = rs.getString(2);
-				 String birth = rs.getString(3);
+				 String name = rs.getString(2);
+				 String phone = rs.getString(3);
+				 String birth = rs.getString(4);
 					 
 					  
 				 System.out.printf("%s %s %s\n",
