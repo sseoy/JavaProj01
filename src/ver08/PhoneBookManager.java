@@ -231,21 +231,11 @@ public class PhoneBookManager {
 		}//end of deteDelete
 		//주소록 전체 출력, 파일에 있는 정보 출력
 		private void dataAllshow() {
-//			try {
-//				ObjectInputStream in = new ObjectInputStream(new FileInputStream("src/ver08/PhoneBook.obj"));
-//
-//				PhoneInfo readInfo = (PhoneInfo)in.readObject();
-//				readInfo.showPhoneInfo();
 				System.out.println("[최초 전체 정보출력]");
 				    for(PhoneInfo info : list)
 				    {
 				        info.showPhoneInfo();      
 				    }
-//			}catch (ClassNotFoundException e) {
-//		    }catch (FileNotFoundException e) {
-//		    }catch (IOException e) {
-//		    }
-			     
 		}
 		
 		//파일형태로 저장하기

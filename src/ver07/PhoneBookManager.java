@@ -8,14 +8,14 @@ import ver06.MenuSelectException;
 
 
 public class PhoneBookManager implements MenuItem, SubMenuItem{
-	private PhoneInfo [] memberbook;
-	private int numOfmember;//정보를 추가할 때 마다 +1증가
+//	private PhoneInfo [] memberbook;
+//	private int numOfmember;//정보를 추가할 때 마다 +1증가
 	//set컬렉션 생성
 	HashSet<PhoneInfo> list = new HashSet<PhoneInfo>();
 	//생성자
 		public PhoneBookManager(int num) {
-			memberbook = new PhoneInfo[num];
-			numOfmember = 0;
+//			memberbook = new PhoneInfo[num];
+//			numOfmember = 0;
 		}
 		//메뉴생성
 		public void printMenu() {
